@@ -1,0 +1,91 @@
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+@model User
+
+
+<div class="container mt-5" style="border: 1px solid #ccc; width: 70%;padding:20px">
+    <h3>Register</h3>
+    <form enctype="multipart/form-data" asp-action="Register" asp-controller="User" method="post">
+        <!-- <input type="hidden" asp-for="c_userid" id="c_userid"> -->
+
+        <div class="form-group">
+            <label asp-for="c_name">Username</label>
+            <input asp-for="c_name" class="form-control" id="c_username" />
+            <span class="text-danger" asp-validation-for="c_name"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="c_email">Email</label>
+            <input asp-for="c_email" type="email" class="form-control" id="c_email" />
+            <span class="text-danger" asp-validation-for="c_email"></span>
+
+        </div>
+
+        <div class="form-group">
+            <label asp-for="c_password">Password</label>
+            <input asp-for="c_password" type="password" class="form-control" id="c_password" />
+            <span class="text-danger" asp-validation-for="c_password"></span>
+
+        </div>
+
+        <div class="row mt-3">
+            <div class=" col-6 form-group">
+                <label asp-for="c_address">Address</label>
+                <input asp-for="c_address" class="form-control" id="c_address" />
+                <span class="text-danger" asp-validation-for="c_address"></span>
+            </div>
+
+            <div class=" col-6 form-group">
+                <label asp-for="c_mobile">Mobile</label>
+                <input asp-for="c_mobile" type="text" class="form-control" id="c_mobile" />
+                <span class="text-danger" asp-validation-for="c_mobile"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="c_gender">Gender</label>
+            <div>
+                <input type="radio" id="gender1" asp-for="c_gender" value="Male"> Male
+                <input type="radio" id="gender2" asp-for="c_gender" value="Female"> Female
+                <input type="radio" id="gender3" asp-for="c_gender" value="Other"> Other
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="c_image">Image</label>
+            <input type="file" class="form-control" asp-for="ProfileImage" id="Image">
+        </div>
+        <button type="submit" class="btn btn-primary mt-3">Register</button>
+    </form>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+
+
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>    
+        $(document).ready(function () {
+            var message = "@TempData["Message"]";  // FIXED: Correct TempData key
+
+            if (message && message !== "") {  // Check if message exists
+                Swal.fire({
+                    icon: message === "Register Successfully" ? 'success' : 'error',
+                    title: message === "Register Successfully" ? 'Success!' : 'Oops...',
+                    text: message
+                });
+
+                // Also show message in div
+                $("#messageDiv").html(`<div class="alert ${message === "Register Successfully" ? 'alert-success' : 'alert-danger'}">${message}</div>`);
+            }
+        });
+    </script>
+}
+
+        
+    

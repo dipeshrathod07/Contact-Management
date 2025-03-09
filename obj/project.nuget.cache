@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "b9T67P7W0lc=",
+  "success": true,
+  "projectFilePath": "D:\\Practise Folder\\MVC PRACTISE\\contact-management\\contact-management.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\8.0.2\\microsoft.extensions.logging.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\npgsql\\9.0.3\\npgsql.9.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
