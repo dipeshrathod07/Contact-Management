@@ -3,47 +3,22 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using contact_management.Repositories.Services;
 using Npgsql;
 
 namespace contact_management.Repositories.Classes
 {
     public class UserRepository : IUserInterface
     {
+        private readonly CommonServices _common;
         private readonly NpgsqlConnection _conn;
-        private readonly IWebHostEnvironment _webHostEnvironment;
-        public UserRepository(NpgsqlConnection conn, IWebHostEnvironment webHostEnvironment)
+
+        public UserRepository(CommonServices common, NpgsqlConnection conn)
         {
+            _common = common;
             _conn = conn;
-            _webHostEnvironment = webHostEnvironment;
-        }
-        #region FileUpload
-
-        public string ImageName(IFormFile ProfileImage, string email)
-        {
-            //1).
-            string fileName = Guid.NewGuid() + "_" + email + Path.GetExtension(ProfileImage.FileName);
-            return fileName;
         }
 
-        public async Task UploadImage(IFormFile ProfileImage, string fileName)
-        {
-            //2) Folder Path create karna
-            string folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "profile_image");
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-
-            //3) Create FilePath
-            string filePath = Path.Combine(folderPath, fileName);
-            //4). Server pe store karenge
-            using (FileStream stream = new FileStream(filePath, FileMode.Create))
-            {
-                await ProfileImage.CopyToAsync(stream);
-            }
-
-        }
-        #endregion
 
         #region  Email Alredy Exist
         public async Task<bool> IsExist(User user)
@@ -51,7 +26,7 @@ namespace contact_management.Repositories.Classes
             string query = "SELECT 1 FROM t_user WHERE c_email=@email LIMIT 1";
             try
             {
-                _conn.Close();
+                await _conn.CloseAsync();
                 await _conn.OpenAsync();
                 using (NpgsqlCommand cd = new NpgsqlCommand(query, _conn))
                 {
@@ -77,6 +52,7 @@ namespace contact_management.Repositories.Classes
         }
         #endregion
 
+
         #region Register
         public async Task<int> AddUser(User user)
         {
@@ -92,7 +68,7 @@ namespace contact_management.Repositories.Classes
 
                     if (user.ProfileImage != null && user.ProfileImage.Length > 0)
                     {
-                        user.c_image = ImageName(user.ProfileImage, user.c_email);
+                        user.c_image = _common.ImageName(user.ProfileImage, user.c_email);
                     }
                     else
                     {
@@ -112,7 +88,7 @@ namespace contact_management.Repositories.Classes
                         cmd.Parameters.AddWithValue("@image", user.c_image != null ? user.c_image : DBNull.Value);
 
                         await cmd.ExecuteNonQueryAsync();//this is use for perform insert update delete query;
-                        await UploadImage(user.ProfileImage, user.c_image);
+                        await _common.UploadImage(user.ProfileImage, user.c_image);
                         await _conn.CloseAsync();
                         return 1;
                     }
